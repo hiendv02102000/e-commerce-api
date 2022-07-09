@@ -3,7 +3,7 @@ package middleware
 import (
 	"api/internal/pkg/domain/domain_model/dto"
 	"api/internal/pkg/domain/domain_model/entity"
-	"api/internal/pkg/repository"
+	"api/internal/pkg/domain/repository"
 
 	"api/pkg/infrastucture/db"
 

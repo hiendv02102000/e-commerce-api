@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // BaseModel struct

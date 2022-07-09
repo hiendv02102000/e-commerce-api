@@ -18,6 +18,7 @@ func (r *Router) Routes() {
 	var err error
 	r.Engine = gin.Default()
 	r.DB, err = db.NewDB()
+	r.DB.MigrateDBWithGorm()
 	if err != nil {
 		fmt.Println(err)
 	}
