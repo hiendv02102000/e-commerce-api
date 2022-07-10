@@ -29,30 +29,50 @@ func (r *Router) Routes() {
 
 	hUserCus := handler.NewCustomerHandler(r.DB)
 	hUserAdmin := handler.NewAdminHandler(r.DB)
-	customerAPI := r.Engine.Group("/customer")
+	hCategory := handler.NewCategoryHandler(r.DB)
+	hBrand := handler.NewBrandHandler(r.DB)
+	api := r.Engine.Group("/api")
 	{
-
-		customerAPI.POST("/login", hUserCus.Login)
-		customerAPI.POST("/register", hUserCus.CreateUser)
-		customerAPI.Use(middleware.AuthMiddleware(r.DB))
+		api.GET("/get_categories", hCategory.GetCategoryList)
+		api.GET("/get_brands", hBrand.GetBrandList)
+		customerAPI := api.Group("/customer")
 		{
-			customerAPI.GET("/profile", hUserCus.GetProfile)
-			customerAPI.PATCH("/update_profile", hUserCus.UpdateProfile)
-			customerAPI.PATCH("/change_password", hUserAdmin.ChangePassWord)
-		}
 
-	}
-	adminAPI := r.Engine.Group("/admin")
-	{
-		adminAPI.POST("/login", hUserAdmin.Login)
-		adminAPI.Use(middleware.AuthMiddleware(r.DB), middleware.AuthAdminMiddleware(r.DB))
+			customerAPI.POST("/login", hUserCus.Login)
+			customerAPI.POST("/register", hUserCus.CreateUser)
+			customerAPI.Use(middleware.AuthMiddleware(r.DB))
+			{
+				customerAPI.GET("/profile", hUserCus.GetProfile)
+				customerAPI.PATCH("/update_profile", hUserCus.UpdateProfile)
+				customerAPI.PATCH("/change_password", hUserAdmin.ChangePassWord)
+			}
+
+		}
+		adminAPI := api.Group("/admin")
 		{
-			adminAPI.GET("/profile", hUserAdmin.GetProfile)
-			adminAPI.POST("/create_user", hUserAdmin.CreateUser)
-			adminAPI.PATCH("/update_profile", hUserAdmin.UpdateProfile)
-			adminAPI.PATCH("/change_password", hUserAdmin.ChangePassWord)
+			adminAPI.POST("/login", hUserAdmin.Login)
+			adminAPI.Use(middleware.AuthMiddleware(r.DB), middleware.AuthAdminMiddleware(r.DB))
+			{
+				adminAPI.GET("/profile", hUserAdmin.GetProfile)
+				adminAPI.POST("/create_user", hUserAdmin.CreateUser)
+				adminAPI.PATCH("/update_profile", hUserAdmin.UpdateProfile)
+				adminAPI.PATCH("/change_password", hUserAdmin.ChangePassWord)
+				categoryAPI := adminAPI.Group("/category")
+				{
+					categoryAPI.POST("/create_category", hCategory.CreateCategory)
+					categoryAPI.PATCH("/update_category", hCategory.UpdateCategory)
+					categoryAPI.DELETE("/delete_category", hCategory.DeleteCategory)
+				}
+				brandAPI := adminAPI.Group("brand")
+				{
+					brandAPI.POST("/create_brand", hBrand.CreateBrand)
+					brandAPI.PATCH("/update_brand", hBrand.UpdateBrand)
+					brandAPI.DELETE("/delete_brand", hBrand.DeleteBrand)
+				}
+			}
 		}
 	}
+
 }
 func NewRouter() Router {
 	var r Router

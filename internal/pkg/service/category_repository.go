@@ -6,5 +6,5 @@ type CategoryRepository interface {
 	FindCategoryList(condition entity.Category) ([]entity.Category, error)
 	CreateCategory(category entity.Category) (entity.Category, error)
 	DeleteCategory(category entity.Category) error
-	UpdateCategory(newCategory, oldCategory entity.Users) (entity.Users, error)
+	UpdateCategory(category, oldcategory entity.Category) (entity.Category, error)
 }

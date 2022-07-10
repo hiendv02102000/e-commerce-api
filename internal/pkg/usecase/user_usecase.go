@@ -81,10 +81,10 @@ func (u *customerUsecase) UpdateProfile(req dto.UpdateProfileRequest, user entit
 	}
 
 	return dto.UpdateProfileResponse{
-		FirstName: newUser.FirstName,
-		LastName:  newUser.LastName,
-		Email:     newUser.Email,
-		AvatarURL: newUser.AvatarUrl,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
+		AvatarURL: user.AvatarUrl,
 	}, nil
 }
 func (u *customerUsecase) CreateUser(req dto.CreateUserRequest) (dto.CreateUserResponse, error) {

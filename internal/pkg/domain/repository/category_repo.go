@@ -9,24 +9,24 @@ type categoryRepository struct {
 	DB db.Database
 }
 
-func (u *categoryRepository) FindcategoryList(condition entity.Category) (category []entity.Category, err error) {
+func (u *categoryRepository) FindCategoryList(condition entity.Category) (category []entity.Category, err error) {
 	err = u.DB.Find(&category, condition)
 	return
 }
-func (u *categoryRepository) Createcategory(category entity.Category) (entity.Category, error) {
+func (u *categoryRepository) CreateCategory(category entity.Category) (entity.Category, error) {
 	err := u.DB.Create(&category)
 	return category, err
 }
-func (u *categoryRepository) Deletecategory(category entity.Category) error {
+func (u *categoryRepository) DeleteCategory(category entity.Category) error {
 	err := u.DB.Delete(&category)
 	return err
 }
-func (u *categoryRepository) Updatecategory(category, oldcategory entity.Category) (entity.Category, error) {
+func (u *categoryRepository) UpdateCategory(category, oldcategory entity.Category) (entity.Category, error) {
 	err := u.DB.Update(&entity.Category{}, &oldcategory, &category)
 	return category, err
 }
 
-func NewcategoryRepository(db db.Database) *categoryRepository {
+func NewCategoryRepository(db db.Database) *categoryRepository {
 	return &categoryRepository{
 		DB: db,
 	}

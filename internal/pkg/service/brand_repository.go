@@ -6,5 +6,5 @@ type BrandRepository interface {
 	FindBrandList(condition entity.Brand) ([]entity.Brand, error)
 	CreateBrand(brand entity.Brand) (entity.Brand, error)
 	DeleteBrand(brand entity.Brand) error
-	UpdateBrand(newBrand, oldBrand entity.Users) (entity.Users, error)
+	UpdateBrand(brand, oldbrand entity.Brand) (entity.Brand, error)
 }
