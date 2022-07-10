@@ -1,6 +1,6 @@
 package main
 
-import "api/internal/api/router"
+import "api/api/router"
 
 func main() {
 	r := router.NewRouter()

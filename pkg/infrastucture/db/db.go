@@ -90,7 +90,6 @@ func (db *Database) Delete(value interface{}) error {
 	return db.DB.Delete(value).Error
 }
 func (db *Database) Update(model interface{}, oldVal interface{}, newVal interface{}) error {
-	//fmt.Println(err)
 	return db.DB.Model(model).Where(oldVal).Updates(newVal).Error
 }
 func (db *Database) ExcQuery(out interface{}, query string, values ...interface{}) error {
