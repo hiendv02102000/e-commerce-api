@@ -21,7 +21,7 @@ type Users struct {
 	Role           userRole   `gorm:"column:role;type:varchar(255)"`
 	AvatarUrl      *string    `gorm:"column:avatar_url;type:varchar(255)"`
 	Token          *string    `gorm:"column:token;type:varchar(255)"`
-	TokenExpiredAt *time.Time `gorm:"column:token_expired_at;type:varchar(255)"`
+	TokenExpiredAt *time.Time `gorm:"column:token_expired_at"`
 	BaseModel
 }
 

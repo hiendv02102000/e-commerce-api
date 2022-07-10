@@ -22,7 +22,7 @@ func (u *brandRepository) Deletebrand(brand entity.Brand) error {
 	return err
 }
 func (u *brandRepository) Updatebrand(brand, oldbrand entity.Brand) (entity.Brand, error) {
-	err := u.DB.Update(entity.Brand{}, &oldbrand, &brand)
+	err := u.DB.Update(&entity.Brand{}, &oldbrand, &brand)
 	return brand, err
 }
 

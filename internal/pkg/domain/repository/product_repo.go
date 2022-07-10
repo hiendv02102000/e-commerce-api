@@ -32,7 +32,7 @@ func (u *productRepository) DeleteProduct(product entity.Product) error {
 	return err
 }
 func (u *productRepository) UpdateProduct(product, oldproduct entity.Product) (entity.Product, error) {
-	err := u.DB.Update(entity.Product{}, &oldproduct, &product)
+	err := u.DB.Update(&entity.Product{}, &oldproduct, &product)
 	return product, err
 }
 

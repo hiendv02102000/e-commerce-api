@@ -22,7 +22,7 @@ func (u *selectedProductRepository) DeleteselectedProduct(selectedProduct entity
 	return err
 }
 func (u *selectedProductRepository) UpdateselectedProduct(selectedProduct, oldselectedProduct entity.SelectedProduct) (entity.SelectedProduct, error) {
-	err := u.DB.Update(entity.SelectedProduct{}, &oldselectedProduct, &selectedProduct)
+	err := u.DB.Update(&entity.SelectedProduct{}, &oldselectedProduct, &selectedProduct)
 	return selectedProduct, err
 }
 

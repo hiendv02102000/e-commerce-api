@@ -22,7 +22,7 @@ func (u *categoryRepository) Deletecategory(category entity.Category) error {
 	return err
 }
 func (u *categoryRepository) Updatecategory(category, oldcategory entity.Category) (entity.Category, error) {
-	err := u.DB.Update(entity.Category{}, &oldcategory, &category)
+	err := u.DB.Update(&entity.Category{}, &oldcategory, &category)
 	return category, err
 }
 

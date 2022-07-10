@@ -32,7 +32,7 @@ func (u *orderRepository) DeleteOrder(order entity.Order) error {
 	return err
 }
 func (u *orderRepository) UpdateOrder(order, oldorder entity.Order) (entity.Order, error) {
-	err := u.DB.Update(entity.Order{}, &oldorder, &order)
+	err := u.DB.Update(&entity.Order{}, &oldorder, &order)
 	return order, err
 }
 

@@ -79,11 +79,12 @@ func (u *customerUsecase) UpdateProfile(req dto.UpdateProfileRequest, user entit
 	if err != nil {
 		return dto.UpdateProfileResponse{}, err
 	}
+
 	return dto.UpdateProfileResponse{
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Email:     user.Email,
-		AvatarURL: user.AvatarUrl,
+		FirstName: newUser.FirstName,
+		LastName:  newUser.LastName,
+		Email:     newUser.Email,
+		AvatarURL: newUser.AvatarUrl,
 	}, nil
 }
 func (u *customerUsecase) CreateUser(req dto.CreateUserRequest) (dto.CreateUserResponse, error) {
@@ -135,7 +136,7 @@ func (u *customerUsecase) Login(loginReq dto.LoginRequest) (string, error) {
 	}
 
 	timeNow := time.Now()
-	if timeNow.After((*user.TokenExpiredAt).Add(time.Hour * 2)) {
+	if user.TokenExpiredAt != nil && timeNow.After((*user.TokenExpiredAt).Add(time.Hour*2)) {
 		return *user.Token, nil
 	}
 	timeExpiredAt := timeNow.Add(time.Hour * 48)
