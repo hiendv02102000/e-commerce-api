@@ -3,6 +3,7 @@ package repository
 import (
 	"api/internal/pkg/domain/domain_model/entity"
 	"api/pkg/infrastucture/db"
+	"fmt"
 )
 
 type productRepository struct {
@@ -15,7 +16,8 @@ func (u *productRepository) FirstProduct(condition entity.Product) (entity.Produ
 	return product, err
 }
 func (u *productRepository) FindProductList(condition entity.Product) (product []entity.Product, err error) {
-	err = u.DB.Find(&product, condition)
+	conditionString := fmt.Sprintf("deleted_at IS NULL AND category_id=%d AND brand_id=%d AND name LIKE %s", condition.CategoryID, condition.BrandID, "'%"+condition.Name+"%'")
+	err = u.DB.Find(&product, conditionString)
 	return
 }
 func (u *productRepository) FindProductListWithPagination(condition entity.Product, pageNum int, pageSize int) (product []entity.Product, err error) {
@@ -36,7 +38,7 @@ func (u *productRepository) UpdateProduct(product, oldproduct entity.Product) (e
 	return product, err
 }
 
-func NewproductRepository(db db.Database) *productRepository {
+func NewProductRepository(db db.Database) *productRepository {
 	return &productRepository{
 		DB: db,
 	}

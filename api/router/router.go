@@ -31,10 +31,13 @@ func (r *Router) Routes() {
 	hUserAdmin := handler.NewAdminHandler(r.DB)
 	hCategory := handler.NewCategoryHandler(r.DB)
 	hBrand := handler.NewBrandHandler(r.DB)
+	hProduct := handler.NewProductHandler(r.DB)
 	api := r.Engine.Group("/api")
 	{
 		api.GET("/get_categories", hCategory.GetCategoryList)
 		api.GET("/get_brands", hBrand.GetBrandList)
+		api.GET("/search_product", hProduct.GetProductList)
+		api.GET("/product_info/:product_id", hProduct.GetProductInfo)
 		customerAPI := api.Group("/customer")
 		{
 
@@ -63,11 +66,17 @@ func (r *Router) Routes() {
 					categoryAPI.PATCH("/update_category", hCategory.UpdateCategory)
 					categoryAPI.DELETE("/delete_category", hCategory.DeleteCategory)
 				}
-				brandAPI := adminAPI.Group("brand")
+				brandAPI := adminAPI.Group("/brand")
 				{
 					brandAPI.POST("/create_brand", hBrand.CreateBrand)
 					brandAPI.PATCH("/update_brand", hBrand.UpdateBrand)
 					brandAPI.DELETE("/delete_brand", hBrand.DeleteBrand)
+				}
+				productAPI := adminAPI.Group("/product")
+				{
+					productAPI.POST("/create_product", hProduct.CreateProduct)
+					productAPI.PATCH("/update_product", hProduct.UpdateProduct)
+					productAPI.DELETE("/delete_product", hProduct.DeleteProduct)
 				}
 			}
 		}

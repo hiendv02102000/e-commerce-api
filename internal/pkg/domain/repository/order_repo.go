@@ -36,7 +36,7 @@ func (u *orderRepository) UpdateOrder(order, oldorder entity.Order) (entity.Orde
 	return order, err
 }
 
-func NeworderRepository(db db.Database) *orderRepository {
+func NewOrderRepository(db db.Database) *orderRepository {
 	return &orderRepository{
 		DB: db,
 	}

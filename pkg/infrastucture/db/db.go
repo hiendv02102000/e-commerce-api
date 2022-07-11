@@ -12,6 +12,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Database struct {
@@ -49,28 +50,22 @@ func (db *Database) Commit() error {
 	return db.DB.Commit().Error
 }
 func (db *Database) First(value interface{}, condition interface{}) error {
-	err := db.DB.First(value, condition).Error
+	err := db.DB.Preload(clause.Associations).First(value, condition).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil
 	}
 	return err
 }
 func (db *Database) Find(value interface{}, condition interface{}) error {
-	err := db.DB.Find(value, condition).Error
+	err := db.DB.Preload(clause.Associations).Find(value, condition).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil
 	}
 	return err
 }
-func (db *Database) Preload(value interface{}, preloadModels ...string) error {
-	d := db.DB
-	for _, model := range preloadModels {
-		d = d.Preload(model)
-	}
-	return d.Find(value, value).Error
-}
+
 func (db *Database) FindWithPagination(value interface{}, offset int, pageSize int, condition interface{}) error {
-	err := db.DB.Offset(offset).Limit(pageSize).Find(value, condition).Error
+	err := db.DB.Offset(offset).Limit(pageSize).Preload(clause.Associations).Find(value, condition).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil
 	}
