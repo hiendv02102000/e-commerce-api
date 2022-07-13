@@ -17,7 +17,6 @@ type Router struct {
 func (r *Router) Routes() {
 
 	r.DB.MigrateDBWithGorm()
-
 	validators.CustomValidate()
 	r.DB.MigrateDBWithGorm()
 
@@ -26,6 +25,7 @@ func (r *Router) Routes() {
 	hCategory := handler.NewCategoryHandler(r.DB)
 	hBrand := handler.NewBrandHandler(r.DB)
 	hProduct := handler.NewProductHandler(r.DB)
+	hOrder := handler.NewOrderHandler(r.DB)
 	api := r.Engine.Group("/api")
 	{
 		api.GET("/get_categories", hCategory.GetCategoryList)
@@ -42,6 +42,17 @@ func (r *Router) Routes() {
 				customerAPI.GET("/profile", hUserCus.GetProfile)
 				customerAPI.PATCH("/update_profile", hUserCus.UpdateProfile)
 				customerAPI.PATCH("/change_password", hUserAdmin.ChangePassWord)
+			}
+			orderAPI := customerAPI.Group("/order")
+			{
+				orderAPI.GET("/get_order_list", hOrder.GetOrderListWithCustomer)
+				orderAPI.GET("/get_list_info/:transaction_code", hOrder.GetOrderInfoWithCustomer)
+				orderAPI.GET("/get_cart", hOrder.GetCart)
+				orderAPI.POST("/create_cart", hOrder.CreateCart)
+				orderAPI.PUT("/put_to_cart", hOrder.PutProductToCart)
+				orderAPI.DELETE("/delete_from_cart", hOrder.DeleteProductFromCart)
+				orderAPI.PATCH("/confirm_order", hOrder.ConfirmOrder)
+				orderAPI.PATCH("/cancel_order/:transaction_code", hOrder.ConfirmOrder)
 			}
 
 		}
@@ -71,6 +82,12 @@ func (r *Router) Routes() {
 					productAPI.POST("/create_product", hProduct.CreateProduct)
 					productAPI.PATCH("/update_product", hProduct.UpdateProduct)
 					productAPI.DELETE("/delete_product", hProduct.DeleteProduct)
+				}
+				orderAPI := adminAPI.Group("/order")
+				{
+					orderAPI.GET("/get_order_list", hOrder.GetOrderListWithAdmin)
+					orderAPI.GET("/get_list_info/:transaction_code", hOrder.GetOrderInfoWithAdmin)
+					orderAPI.PATCH("/change_status_order", hOrder.ChangeStatusOrder)
 				}
 			}
 		}

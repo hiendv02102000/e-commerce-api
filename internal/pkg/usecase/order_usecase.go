@@ -39,6 +39,7 @@ func (u *orderUsecase) GetOrderList(req dto.GetOrderListRequest) (dto.GetOrderLi
 		Address:         req.Address,
 		Phone:           req.Phone,
 		Status:          entity.OrderStatus(req.OrderStatus),
+		CustomerID:      req.CustomerID,
 	}, req.PageNum, PageSize)
 	if err != nil {
 		return dto.GetOrderListResponse{}, err
