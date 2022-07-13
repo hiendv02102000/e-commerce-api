@@ -52,7 +52,7 @@ func (r *Router) Routes() {
 				orderAPI.PUT("/put_to_cart", hOrder.PutProductToCart)
 				orderAPI.DELETE("/delete_from_cart", hOrder.DeleteProductFromCart)
 				orderAPI.PATCH("/confirm_order", hOrder.ConfirmOrder)
-				orderAPI.PATCH("/cancel_order/:transaction_code", hOrder.ConfirmOrder)
+				orderAPI.PATCH("/cancel_order", hOrder.ConfirmOrder)
 			}
 
 		}
