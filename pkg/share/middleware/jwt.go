@@ -23,3 +23,13 @@ func GenerateJWTToken(params JWTParam) (string, error) {
 	tokenString, err := token.SignedString([]byte("access secret"))
 	return tokenString, err
 }
+
+func GenerateTransactionCode() (string, error) {
+	var goClaims = jwt.MapClaims{}
+	goClaims["authorized"] = true
+	goClaims["uuid"] = uuid.Must(uuid.NewV4(), nil) // generate uuid
+	goClaims["time"] = time.Now().Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, goClaims)
+	tokenString, err := token.SignedString([]byte("access secret"))
+	return tokenString, err
+}

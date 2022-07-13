@@ -93,7 +93,7 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		return
 	}
 	user := middleware.GetUserFromContext(c)
-	file, _ := c.FormFile("file")
+	file, _ := c.FormFile("avatar")
 	var ioFile multipart.File
 	ioFile = nil
 	if file != nil {

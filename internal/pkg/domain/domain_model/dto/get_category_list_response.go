@@ -2,7 +2,7 @@ package dto
 
 type GetCategoryListResponse struct {
 	Total        int                `json:"total"`
-	CategoryList []CategoryResponse `json:"Category_list"`
+	CategoryList []CategoryResponse `json:"category_list"`
 }
 
 type CategoryResponse struct {

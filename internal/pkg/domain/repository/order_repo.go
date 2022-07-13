@@ -14,13 +14,18 @@ func (u *orderRepository) FirstOrder(condition entity.Order) (entity.Order, erro
 	err := u.DB.First(&order, condition)
 	return order, err
 }
-func (u *orderRepository) FindOrderList(condition entity.Order) (order []entity.Order, err error) {
-	err = u.DB.Find(&order, condition)
+func (u *orderRepository) FindOrderList(condition entity.Order) (orders []entity.Order, err error) {
+	err = u.DB.Find(&orders, condition)
 	return
 }
-func (u *orderRepository) FindOrderListWithPagination(condition entity.Order, pageNum int, pageSize int) (order []entity.Order, err error) {
+func (u *orderRepository) FindOrderListWithPagination(condition entity.Order, pageNum int, pageSize int) (orders []entity.Order, err error) {
 	offset := (pageNum - 1) * pageSize
-	err = u.DB.FindWithPagination(&order, offset, pageSize, condition)
+	gDB := u.DB.DB
+	err = gDB.Offset(offset).Limit(pageSize).Where("address LIKE ? AND phone LIKE ? AND transaction_code LIKE ?", condition.Address, condition.Phone, condition.TransactionCode).
+		Find(&orders, entity.Order{
+			CustomerID: condition.CustomerID,
+			Status:     condition.Status,
+		}).Error
 	return
 }
 func (u *orderRepository) CreateOrder(order entity.Order) (entity.Order, error) {

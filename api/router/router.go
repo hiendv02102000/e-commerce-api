@@ -6,8 +6,6 @@ import (
 	"api/pkg/share/middleware"
 	"api/pkg/share/validators"
 
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,13 +15,9 @@ type Router struct {
 }
 
 func (r *Router) Routes() {
-	var err error
-	r.Engine = gin.Default()
-	r.DB, err = db.NewDB()
+
 	r.DB.MigrateDBWithGorm()
-	if err != nil {
-		fmt.Println(err)
-	}
+
 	validators.CustomValidate()
 	r.DB.MigrateDBWithGorm()
 
@@ -85,6 +79,12 @@ func (r *Router) Routes() {
 }
 func NewRouter() Router {
 	var r Router
+	r.Engine = gin.Default()
+	database, err := db.NewDB()
+	if err != nil {
+		return Router{}
+	}
+	r.DB = database
 	r.Routes()
 	return r
 }

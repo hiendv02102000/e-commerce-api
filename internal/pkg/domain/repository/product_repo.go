@@ -16,13 +16,26 @@ func (u *productRepository) FirstProduct(condition entity.Product) (entity.Produ
 	return product, err
 }
 func (u *productRepository) FindProductList(condition entity.Product) (product []entity.Product, err error) {
-	conditionString := fmt.Sprintf("deleted_at IS NULL AND category_id=%d AND brand_id=%d AND name LIKE %s", condition.CategoryID, condition.BrandID, "'%"+condition.Name+"%'")
+	conditionString := fmt.Sprintf("deleted_at IS NULL AND name LIKE %s ", "'%"+condition.Name+"%'")
+	if condition.BrandID > 0 {
+		conditionString += fmt.Sprintf("AND brand_id=%d ", condition.BrandID)
+	}
+	if condition.CategoryID > 0 {
+		conditionString += fmt.Sprintf("AND category_id=%d ", condition.CategoryID)
+	}
 	err = u.DB.Find(&product, conditionString)
 	return
 }
 func (u *productRepository) FindProductListWithPagination(condition entity.Product, pageNum int, pageSize int) (product []entity.Product, err error) {
 	offset := (pageNum - 1) * pageSize
-	err = u.DB.FindWithPagination(&product, offset, pageSize, condition)
+	conditionString := fmt.Sprintf("deleted_at IS NULL AND name LIKE %s ", "'%"+condition.Name+"%'")
+	if condition.BrandID > 0 {
+		conditionString += fmt.Sprintf("AND brand_id=%d ", condition.BrandID)
+	}
+	if condition.CategoryID > 0 {
+		conditionString += fmt.Sprintf("AND category_id=%d ", condition.CategoryID)
+	}
+	err = u.DB.FindWithPagination(&product, offset, pageSize, conditionString)
 	return
 }
 func (u *productRepository) CreateProduct(product entity.Product) (entity.Product, error) {

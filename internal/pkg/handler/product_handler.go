@@ -4,7 +4,7 @@ import (
 	"api/internal/pkg/domain/domain_model/dto"
 	"api/internal/pkg/usecase"
 	"api/pkg/infrastucture/db"
-	"fmt"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
@@ -33,7 +33,22 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, data)
 		return
 	}
-	res, err := h.ProductUsecase.CreateProduct(req, nil)
+	file, _ := c.FormFile("product_img")
+	var ioFile multipart.File
+	ioFile = nil
+	if file != nil {
+		ioFile, err = file.Open()
+		if err != nil {
+
+			data := dto.BaseResponse{
+				Status: http.StatusBadRequest,
+				Error:  err.Error(),
+			}
+			c.JSON(http.StatusBadRequest, data)
+			return
+		}
+	}
+	res, err := h.ProductUsecase.CreateProduct(req, ioFile)
 	if err != nil {
 		data := dto.BaseResponse{
 			Status: http.StatusBadRequest,
@@ -60,7 +75,22 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, data)
 		return
 	}
-	res, err := h.ProductUsecase.UpdateProduct(req, nil)
+	file, _ := c.FormFile("product_img")
+	var ioFile multipart.File
+	ioFile = nil
+	if file != nil {
+		ioFile, err = file.Open()
+		if err != nil {
+
+			data := dto.BaseResponse{
+				Status: http.StatusBadRequest,
+				Error:  err.Error(),
+			}
+			c.JSON(http.StatusBadRequest, data)
+			return
+		}
+	}
+	res, err := h.ProductUsecase.UpdateProduct(req, ioFile)
 	if err != nil {
 		data := dto.BaseResponse{
 			Status: http.StatusBadRequest,
@@ -100,7 +130,6 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 func (h *ProductHandler) GetProductList(c *gin.Context) {
 	req := dto.GetProductListRequest{}
 	err := c.ShouldBind(&req)
-	fmt.Println(req)
 	if err != nil {
 		data := dto.BaseResponse{
 			Status: http.StatusBadRequest,

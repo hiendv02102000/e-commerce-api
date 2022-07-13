@@ -6,6 +6,7 @@ import (
 	"api/internal/pkg/domain/repository"
 	"api/internal/pkg/service"
 	"api/pkg/infrastucture/db"
+	"api/pkg/share/utils"
 	"errors"
 	"io"
 )
@@ -31,7 +32,7 @@ func (u *productUsecase) GetProductList(req dto.GetProductListRequest) (dto.GetP
 			BrandID:    req.BrandID,
 			CategoryID: req.CategoryID,
 			Name:       req.ProductName,
-		}, PageSize, req.PageNum)
+		}, req.PageNum, PageSize)
 	if err != nil {
 		return dto.GetProductListResponse{}, err
 	}
@@ -101,6 +102,13 @@ func (u *productUsecase) UpdateProduct(req dto.UpdateProductRequest, imgProduct 
 		CategoryID:  req.CategoryID,
 		Quantity:    req.Quantity,
 	}
+	if imgProduct != nil {
+		url, errUpload := utils.UploadFile(imgProduct, product.Name, []string{"product"})
+		if errUpload != nil {
+			return dto.ProductResponse{}, errUpload
+		}
+		newProduct.ImgURL = url
+	}
 	_, err = u.ProductRepo.UpdateProduct(newProduct, product)
 	if err != nil {
 		return dto.ProductResponse{}, err
@@ -134,6 +142,13 @@ func (u *productUsecase) CreateProduct(req dto.CreateProductRequest, imgProduct 
 		BrandID:     req.BrandID,
 		CategoryID:  req.CategoryID,
 		Quantity:    req.Quantity,
+	}
+	if imgProduct != nil {
+		url, errUpload := utils.UploadFile(imgProduct, product.Name, []string{"product"})
+		if errUpload != nil {
+			return dto.ProductResponse{}, errUpload
+		}
+		product.ImgURL = url
 	}
 	product, err := u.ProductRepo.CreateProduct(product)
 
